@@ -21,22 +21,18 @@ public class RedisConfig {
     private Resource redisProperties;
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() throws IOException {
+    public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-
-        Properties properties = new Properties();
-        properties.load(redisProperties.getInputStream());
-
-        configuration.setHostName(properties.getProperty("spring.redis.host"));
-        configuration.setPort(Integer.parseInt(properties.getProperty("spring.redis.port")));
-        configuration.setPassword(properties.getProperty("spring.redis.password"));
+        configuration.setHostName(redisProperties.getProperty("spring.redis.host"));
+        configuration.setPort(Integer.parseInt(redisProperties.getProperty("spring.redis.port")));
+        configuration.setPassword(redisProperties.getProperty("spring.redis.password"));
 
         LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory(configuration);
         return connectionFactory;
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() throws IOException {
+    public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
